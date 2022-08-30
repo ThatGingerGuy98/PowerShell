@@ -1,17 +1,17 @@
 $hashes = @()
-if (!$files)
-{
-    $files = (gci -force -Recurse -Path \ -ErrorAction SilentlyContinue).fullname
-} # Designed to save time, if the var already exists, don't waste time refilling it.  Script will still take quite a bit of time.
 if (!$hashes)
 {
     Write-Host -ForegroundColor Red "Please add hashes to the hashes variable."
     Return
 } # If there are no hashes, end the program and tell the user to add to the variable.
+#if (!$files)
+#{
+    $files = (gci -force -Recurse -Path \ -ErrorAction SilentlyContinue).fullname
+#} # Designed to save time, if the var already exists, don't waste time refilling it.  Script will still take quite a bit of time.
 $noMatchFound = $true
 foreach ($hash in $hashes)
 {
-    Write-Host "Checking $hash"
+    Write-Host -ForegroundColor Cyan "Checking $hash"
     foreach ($file in $files)
     {
         if ($(Get-FileHash -Algorithm MD5 $file -ErrorAction SilentlyContinue).hash -imatch $hash)
