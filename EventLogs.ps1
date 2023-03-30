@@ -308,6 +308,163 @@ $eventID = Read-Host -Prompt "Please enter an eventID you would like to investig
                 }};L="Pre-Authentication Types"} | Out-GridView -Title "Information for EventID $eventID ~ There are $(($eventLogs | where EventID -eq $eventID).count) of this event.  This event audits Kerberos authentication ticket requests.  This should only be found on Domain Controllers."
             } else { Write-Host -ForegroundColor Yellow "No events of this EventID." }
         }
+        '4769' {
+            if ($eventLogs | where EventID -eq $eventID) {
+                $eventLogs | where EventID -eq $eventID | Select TimeGenerated, EntryType, @{E={$_.ReplacementStrings[0]};L="User"}, @{E={$_.ReplacementStrings[2]};L="Service Name"}, @{E={switch ($_.ReplacementStrings[3])
+                {
+                    {$_ -match "S-1-5-\d{2}(-\d{10}){2}-\d{9}-502"} { Return "$_"}
+                    Default { Return "NON-STANDARD VALUE - $_" }
+                }};L="Service SID"}, @{E={$_.ReplacementStrings[6]};L="Client IP"}, @{E={$_.ReplacementStrings[7]};L="Client Port"}, @{E={switch ($_.ReplacementStrings[4])
+                {
+                    {$_ -match "0x40810010" -or $_ -match "0x40810000" -or $_ -match "0x60810010"} { Return "Common Value: $_"}
+                    Default { Return "Uncommon Value: $_" }
+                }};L="Ticket Option"}, @{E={switch ($_.ReplacementStrings[8])
+                {
+                    0x0 {Return "Success"}
+                    0x6 {Return "Username does not exist"}
+                    0x7 {Return "Domain Controller server not found"}
+                    0x8 {Return "Multiple DCs of same name found, failure"}
+                    0x9 {Return "No master key found"}
+                    0xA {Return "Client time ahead of server time"}
+                    0xB {Return "Client server time mismatch"}
+                    0xC {Return "Logon restriction detected"}
+                    0xD {Return "Credential Delegation not authorized"}
+                    0xE {Return "Encryption type not supported"}
+                    0xF {Return "Checksum not supported"}
+                    0x10 {Return "Smart card logon not accepted, proper certificate not found"}
+                    0x12 {Return "Client revoked, likely a disabled, expired, or locked out account"}
+                    0x14 {Return "TGT revoked, PKCROSS ticket expired"}
+                    0x17 {Return "User's password has expired"}
+                    0x18 {Return "User's password is incorrect"}
+                    0x19 {Return "Pre-auth failure"}
+                    0x1F {Return "Authenticator encrypted with something other than session key.  Worth investigation"}
+                    0x20 {Return "Ticket Expired"}
+                    0x21 {Return "Server time ahead of client time"}
+                    0x22 {Return "Duplicate request"}
+                    0x23 {Return "Ticket sent to wrong server"}
+                    0x24 {Return "Ticket and authenticator do not match"}
+                    0x25 {Return "Time difference exceeds authroized difference"}
+                    0x26 {Return "IP header does not match address in request"}
+                    0x27 {Return "Kerberos version mismatch"}
+                    0x28 {Return "Error type unsuppored"}
+                    0x29 {Return "Checksum does not match"}
+                    0x2A {Return "Packet sequence out of order, or packet is missing"}
+                    0x2C {Return "Version of key not available"}
+                    0x2D {Return "Key not available"}
+                    0x32 {Return "Checksum not supported"}
+                    0x34 {Return "Ticket too large"}
+                    0x3C {Return "Generic Error"}
+                    0x3D {Return "Specific field too long"}
+                    0x3E {Return "Client not trusted"}
+                    0x3F {Return "Server not trusted"}
+                    0x40 {Return "Invalid signature"}
+                    0x41 {Return "Encryption to weak"}
+                    0x42 {Return "User to user authorization is required"}
+                    0x43 {Return "No TGT available"}
+                    0x44 {Return "Incorrect domain or principal"}
+                    {($_ -ge 0x1 -and $_ -le 0x5) -or $_ -eq (0x11, 0x13, 0x15, 0x16, 0x1A, 0x1D, 0x2E, 0x2F, 0x31, 0x33, 0x30)} { Return "Weird: $_"}
+                    Default { Return "Extra Wierd: $_" }
+                }};L="Status"}, @{E={switch ($_.ReplacementStrings[5])
+                {
+                    0x1 {Return "CRC - Deprecated"}
+                    0x3 {Return "MD5 - Deprecated"}
+                    0x11 {Return "AES128"}
+                    0x12 {Return "AES256"}
+                    0x17 {Return "RC4-HMAC"}
+                    0x18 {Return "RC4-HMAC-EXP"}
+                    Default { Return "Audit Failure" }
+                }};L="Encryption Type"} | Out-GridView -Title "Information for EventID $eventID ~ There are $(($eventLogs | where EventID -eq $eventID).count) of this event.  This event audits Kerberos service ticket requests.  This should only be found on Domain Controllers."
+            } else { Write-Host -ForegroundColor Yellow "No events of this EventID." }
+        }
+        '4770' {
+            if ($eventLogs | where EventID -eq $eventID) {
+                $eventLogs | where EventID -eq $eventID | Select TimeGenerated, EntryType, @{E={$_.ReplacementStrings[0]};L="User"}, @{E={$_.ReplacementStrings[2]};L="Service Name"}, @{E={switch ($_.ReplacementStrings[3])
+                {
+                    {$_ -match "S-1-5-\d{2}(-\d{10}){2}-\d{9}-502"} { Return "$_"}
+                    Default { Return "NON-STANDARD VALUE - $_" }
+                }};L="Service SID"}, @{E={$_.ReplacementStrings[6]};L="Client IP"}, @{E={$_.ReplacementStrings[7]};L="Client Port"}, @{E={switch ($_.ReplacementStrings[4])
+                {
+                    {$_ -match "0x40810010" -or $_ -match "0x40810000" -or $_ -match "0x60810010"} { Return "Common Value: $_"}
+                    Default { Return "Uncommon Value: $_" }
+                }};L="Ticket Option"},  | Out-GridView -Title "Information for EventID $eventID ~ There are $(($eventLogs | where EventID -eq $eventID).count) of this event.  This event audits Kerberos service ticket requests.  This should only be found on Domain Controllers."
+            } else { Write-Host -ForegroundColor Yellow "No events of this EventID." }
+        }
+        '4771' {
+            if ($eventLogs | where EventID -eq $eventID) {
+                $eventLogs | where EventID -eq $eventID | Select TimeGenerated, EntryType, @{E={$_.ReplacementStrings[0]};L="User"}, @{E={$_.ReplacementStrings[2]};L="Service Name"}, @{E={switch ($_.ReplacementStrings[1])
+                {
+                    {$_ -match "S-1-5-\d{2}(-\d{10}){2}-\d{9}-502"} { Return "$_"}
+                    Default { Return "NON-STANDARD VALUE - $_" }
+                }};L="Service SID"}, @{E={$_.ReplacementStrings[6]};L="Client IP"}, @{E={$_.ReplacementStrings[7]};L="Client Port"}, @{E={switch ($_.ReplacementStrings[4])
+                {
+                    {$_ -match "0x40810010" -or $_ -match "0x40810000" -or $_ -match "0x60810010"} { Return "Common Value: $_"}
+                    Default { Return "Uncommon Value: $_" }
+                }};L="Ticket Option"}, @{E={switch ($_.ReplacementStrings[5])
+                {
+                    0x0 {Return "Success"}
+                    0x6 {Return "Username does not exist"}
+                    0x7 {Return "Domain Controller server not found"}
+                    0x8 {Return "Multiple DCs of same name found, failure"}
+                    0x9 {Return "No master key found"}
+                    0xA {Return "Client time ahead of server time"}
+                    0xB {Return "Client server time mismatch"}
+                    0xC {Return "Logon restriction detected"}
+                    0xD {Return "Credential Delegation not authorized"}
+                    0xE {Return "Encryption type not supported"}
+                    0xF {Return "Checksum not supported"}
+                    0x10 {Return "Smart card logon not accepted, proper certificate not found"}
+                    0x12 {Return "Client revoked, likely a disabled, expired, or locked out account"}
+                    0x14 {Return "TGT revoked, PKCROSS ticket expired"}
+                    0x17 {Return "User's password has expired"}
+                    0x18 {Return "User's password is incorrect"}
+                    0x19 {Return "Pre-auth failure"}
+                    0x1F {Return "Authenticator encrypted with something other than session key.  Worth investigation"}
+                    0x20 {Return "Ticket Expired"}
+                    0x21 {Return "Server time ahead of client time"}
+                    0x22 {Return "Duplicate request"}
+                    0x23 {Return "Ticket sent to wrong server"}
+                    0x24 {Return "Ticket and authenticator do not match"}
+                    0x25 {Return "Time difference exceeds authroized difference"}
+                    0x26 {Return "IP header does not match address in request"}
+                    0x27 {Return "Kerberos version mismatch"}
+                    0x28 {Return "Error type unsuppored"}
+                    0x29 {Return "Checksum does not match"}
+                    0x2A {Return "Packet sequence out of order, or packet is missing"}
+                    0x2C {Return "Version of key not available"}
+                    0x2D {Return "Key not available"}
+                    0x32 {Return "Checksum not supported"}
+                    0x34 {Return "Ticket too large"}
+                    0x3C {Return "Generic Error"}
+                    0x3D {Return "Specific field too long"}
+                    0x3E {Return "Client not trusted"}
+                    0x3F {Return "Server not trusted"}
+                    0x40 {Return "Invalid signature"}
+                    0x41 {Return "Encryption to weak"}
+                    0x42 {Return "User to user authorization is required"}
+                    0x43 {Return "No TGT available"}
+                    0x44 {Return "Incorrect domain or principal"}
+                    {($_ -ge 0x1 -and $_ -le 0x5) -or $_ -eq (0x11, 0x13, 0x15, 0x16, 0x1A, 0x1D, 0x2E, 0x2F, 0x31, 0x33, 0x30)} { Return "Weird: $_"}
+                    Default { Return "Extra Wierd: $_" }
+                }};L="Status"}, @{E={switch ($_.ReplacementStrings[5])
+                {
+                    0x1 {Return "CRC - Deprecated"}
+                    0x3 {Return "MD5 - Deprecated"}
+                    0x11 {Return "AES128"}
+                    0x12 {Return "AES256"}
+                    0x17 {Return "RC4-HMAC"}
+                    0x18 {Return "RC4-HMAC-EXP"}
+                    Default { Return "Audit Failure" }
+                }};L="Encryption Type"}, @{E={switch ($_.ReplacementStrings[6])
+                {
+                    0 {Return "No Pre-Authentication"}
+                    2 {Return "Username/Passowrd Authentication"}
+                    15 {Return "Smart Card Authentication"}
+                    20 {Return "Used in KDC Referral tickets"}
+                    138 {Return "Logon using Kerveros Armoring (FAST)"}
+                    {$_ -eq (11, 17, 19)} {Return "Wierd"}
+                }};L="Pre-Authentication Types"} | Out-GridView -Title "Information for EventID $eventID ~ There are $(($eventLogs | where EventID -eq $eventID).count) of this event.  This event audits Kerberos service ticket requests.  This should only be found on Domain Controllers."
+            } else { Write-Host -ForegroundColor Yellow "No events of this EventID." }
+        }
         'quit' { return $null }
         Default {
             Write-Host -ForegroundColor Red "Please enter an Event ID as defined in the Intel Matrix."
