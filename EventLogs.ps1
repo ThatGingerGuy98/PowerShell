@@ -1,5 +1,5 @@
 ﻿if ($eventLogs) {} else {
-    <#$eventLogs = importcsv file#>
+    #Get-EventLog -LogName whatever lol idk
 }
 while ($true){
 $eventID = Read-Host -Prompt "Please enter an eventID you would like to investigate`nType 'quit' to exit program"
